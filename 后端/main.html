@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="./js/vue.js"></script>
+		<script src="./js/axios.js"></script>
+		<script src="./js/lib-master/index.js" charset="utf-8"></script>
+
+		<style>
+			
+			#con{
+				width: 1000px;
+				height: 650px;
+				background-color: lightcyan;
+				position: relative;
+				margin: 0 auto;
+			}
+			
+			#con>div{
+				float: left;
+			}
+			
+			#con>.left{
+				width: 200px;
+				height: 100%;
+				background-color: lightgray;
+			}
+			#con>.right{
+				background-color: b;
+			}
+			
+			#con>.right>iframe{
+				border:0;
+				width:800px;
+				height:650px;
+			}
+			
+			
+		</style>
+	</head>
+	<body>
+		
+		<div id="con">
+			<div>{{msg}}</div>
+			<div style="clear:both"></div>
+			<div class="left">
+				<div><a href="./product.html" target="myf">商品信息</a></div>
+				<div>
+					<a href="./type.html" target="myf">类别信息</a>
+				</div>
+						
+			</div>			
+			<div class="right">
+				<iframe name="myf" src="./product.html"></iframe>				
+			</div>
+		</div>
+		
+		<Script>
+			
+			axios.defaults.withCredentials = true;
+			
+			new Vue({
+				
+				data:{
+					msg: '',
+				},
+				created(){
+					
+					axios.get('http://127.0.0.1:8080/project/GetUserServlet').then(r=>{
+						console.log(r.data);
+						if(r.data.isOK){
+						//	console.log(loginUser);
+							this.msg = `欢迎回来: ${r.data.loginUser.nickname}`;
+						}
+					});
+					
+				},
+				
+			}).$mount('#con');
+			
+			
+		</Script>
+		
+	</body>
+</html>

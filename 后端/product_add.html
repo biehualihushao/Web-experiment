@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="./js/vue.js"></script>
+		<script src="./js/axios.js"></script>
+		
+		<style>
+			#app div {
+			  font-size: 24px;
+			  font-weight: bold;
+			  margin-bottom: 10px;
+			  color: #333;
+			}
+			
+			#app select,
+			#app input[type="text"] {
+			  width: 80%;
+			  padding: 10px;
+			  margin-bottom: 10px;
+			  border-radius: 5px;
+			  border: none;
+			  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+			}
+			
+			#app select {
+			  background-color: #fff;
+			  color: #333;
+			}
+			
+			#app button {
+			  background-color: #007BFF;
+			  color: #fff;
+			  padding: 10px 20px;
+			  border: none;
+			  border-radius: 5px;
+			  font-size: 18px;
+			  font-weight: bold;
+			  cursor: pointer;
+			}
+			
+			#app button:hover {
+			  background-color: #0069D9;
+			}
+		</style>
+	</head>
+	<body>
+		
+		<div id="app">
+			<div>商品上架</div>
+			类别:<select >
+				<option v-for="type of typeList" :key="type.id" :value="type.id">{{type.tname}}</option>
+			</select><br />
+			
+			名字:
+			<input type="text" v-model = "product.pname" ><br />
+			
+			单价:
+			<input type="text" v-model = "product.price"><br />
+			
+			商品描述:
+			<input type="text" v-model = "product.description" ><br />
+			
+			
+			图片:
+			<input type="text" v-model="product.picture"  /><br />
+			
+			<button @click="actionAdd">添加</button>
+		</div>
+		
+		
+		<script>
+			
+			//设置axios使用ajax的时候允许携带cookie
+			axios.defaults.withCredentials = true;
+			
+			let v = new Vue({
+				
+				data:{
+					typeList:[],
+					product:{
+						pname: '',
+						price: 700,
+						description:'' ,
+						picture: '',
+					},
+				},
+				methods:{
+					actionAdd(){
+						if(!this.product.pname || !this.product.price || !this.product.description || !this.product.picture){
+						        alert('请填写所有必填字段');
+						        return;
+						    }
+						axios.post('http://127.0.0.1:8080/project/AddServlet', this.product, { headers: { 'Content-Type': 'application/json;charset=utf-8' } }).then(r=>{
+							
+							
+							if(r.data.isOK){
+								
+								alert('添加成功');
+								location.href="./product.html";
+							}else{
+								alert('添加失败');
+							}
+						})
+					},
+				},
+				created(){
+					
+					axios.get('http://127.0.0.1:8080/project/GetAllServleti').then(r=>{
+						this.typeList = r.data.list;
+						
+					})
+					
+					
+				},
+				
+			}).$mount('#app')
+			
+			
+		</script>
+		
+		
+	</body>
+</html>
